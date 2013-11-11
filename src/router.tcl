@@ -15,5 +15,5 @@ proc ::agate::router::setRoute {appVar type path method} {
 
 proc ::agate::router::getRoutes {appVar type} {
     upvar $appVar app
-    return paths [dict get $app routes $type]
+    return [dict get $app routes $type]
 }

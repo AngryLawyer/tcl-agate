@@ -1,2 +1,4 @@
+install:
+  - sudo apt-get install tcl
 script:
     - cd tests && tclsh all.tcl
