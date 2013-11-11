@@ -1,0 +1,15 @@
+package require tcltest
+namespace import ::tcltest::test
+namespace import ::tcltest::cleanupTests
+
+source ../src/agate.tcl
+
+test setRoutes {
+    Adding a route should put it in the routes table
+} -body {
+    set app [agate::application]
+    agate::get app "/" {}
+    return agate::router::getRoutes app get
+} -result {"/" {}}
+
+cleanupTests

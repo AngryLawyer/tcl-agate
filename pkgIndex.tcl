@@ -8,4 +8,4 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded agate 0.1 [list source [file join $dir agate.tcl]]
+package ifneeded agate 0.1 [list source [file join $dir src/agate.tcl]]
