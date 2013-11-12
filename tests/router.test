@@ -8,8 +8,8 @@ test setRoutes {
     Adding a route should put it in the routes table
 } -body {
     set app [agate::application]
-    agate::get app "/" {}
-    return agate::router::getRoutes app get
-} -result {"/" {}}
+    agate::router::setRoute app get "/" {}
+    return [agate::router::getRoutes app get]
+} -result {{/ {}}}
 
 cleanupTests
