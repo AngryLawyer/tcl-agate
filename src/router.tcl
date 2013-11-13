@@ -18,6 +18,12 @@ proc ::agate::router::getRoutes {appVar type} {
     return [dict get $app routes $type]
 }
 
+# Check against a given method type whether any URLs match it
+# @param appVar The Agate dictionary
+# @param type The method type to match
+# @param url The input url
+#
+# @return {callback, captured variables} 
 # TODO: This should also handle python-style named params
 proc ::agate::router::matchRoute {appVar type url} {
     upvar $appVar app
@@ -25,7 +31,12 @@ proc ::agate::router::matchRoute {appVar type url} {
     foreach {path} $paths {
         set result [regexp -inline -- [lindex $path 0] $url]
         if {[llength $result] > 0} {
-            return [list {} [lindex $path 1]]
+            set params {}
+            # If we have captured variables, we need to return them
+            if {[llength $result] > 1} {
+                set params [lrange $result 1 end]
+            }
+            return [list [lindex $path 1] $params]
         }
     }
 }
