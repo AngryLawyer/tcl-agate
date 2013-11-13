@@ -9,6 +9,7 @@ proc ::agate::relativeSource {name} {
 }
 
 agate::relativeSource router.tcl
+agate::relativeSource request.tcl
 
 proc ::agate::application {} {
     return [dict create routes [::agate::router::init]]
@@ -17,7 +18,7 @@ proc ::agate::application {} {
 proc ::agate::run {appVar {requestData 0}} {
     upvar $appVar app
     if {$requestData == 0} {
-        set requestData [::agate::generateRequestData]
+        set requestData [::agate::request::generateRequestData]
     }
     set response [::agate::handle app $requestData]
     puts $response

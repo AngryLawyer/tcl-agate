@@ -1,5 +1,5 @@
 namespace eval ::agate::router {
-    namespace export init setRoutes getRoutes
+    namespace export init setRoutes getRoutes matchRoute
 }
 
 proc ::agate::router::init {} {
