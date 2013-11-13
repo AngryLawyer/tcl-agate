@@ -18,6 +18,6 @@ test matchRoute {
     set app [agate::application]
     agate::router::setRoute app get "/" {{} puts trololo}
     return [agate::router::matchRoute app get "/"]
-} -result {{} puts trololo}
+} -result {{} {{} puts trololo}}
 
 cleanupTests

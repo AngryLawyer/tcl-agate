@@ -25,7 +25,7 @@ proc ::agate::router::matchRoute {appVar type url} {
     foreach {path} $paths {
         set result [regexp -inline -- [lindex $path 0] $url]
         if {[llength $result] > 0} {
-            return [lindex $path 1]
+            return [list {} [lindex $path 1]]
         }
     }
 }
