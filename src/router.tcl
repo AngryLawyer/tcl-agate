@@ -3,7 +3,7 @@ namespace eval ::agate::router {
 }
 
 proc ::agate::router::init {} {
-    return [dict create get [list] post [list] put [list] delete [list]]
+    return [dict create GET [list] POST [list] PUT [list] DELETE [list]]
 }
 
 proc ::agate::router::setRoute {appVar type path method} {
@@ -25,16 +25,16 @@ proc ::agate::router::getRoutes {appVar type} {
 #
 # @return {callback, captured variables} 
 # TODO: This should also handle python-style named params
-proc ::agate::router::matchRoute {appVar type url} {
-    upvar $appVar app
+proc ::agate::router::matchRoute {app type url} {
     set paths [dict get $app routes $type]
     foreach {path} $paths {
         set result [regexp -inline -- [lindex $path 0] $url]
         if {[llength $result] > 0} {
-            set params {}
             # If we have captured variables, we need to return them
             if {[llength $result] > 1} {
                 set params [lrange $result 1 end]
+            } else {
+                set params {}
             }
             return [list [lindex $path 1] $params]
         }
