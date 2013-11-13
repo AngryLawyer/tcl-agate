@@ -18,10 +18,14 @@ proc ::agate::router::getRoutes {appVar type} {
     return [dict get $app routes $type]
 }
 
+# TODO: This should also handle python-style named params
 proc ::agate::router::matchRoute {appVar type url} {
     upvar $appVar app
     set paths [dict get $app routes $type]
     foreach {path} $paths {
-        puts $path
+        set result [regexp -inline -- [lindex $path 0] $url]
+        if {[llength $result] > 0} {
+            return [lindex $path 1]
+        }
     }
 }

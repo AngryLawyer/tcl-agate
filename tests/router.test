@@ -12,4 +12,12 @@ test setRoutes {
     return [agate::router::getRoutes app get]
 } -result {{/ {}}}
 
+test matchRoute {
+    Simple paths should match
+} -body {
+    set app [agate::application]
+    agate::router::setRoute app get "/" {{} puts trololo}
+    return [agate::router::matchRoute app get "/"]
+} -result {{} puts trololo}
+
 cleanupTests
