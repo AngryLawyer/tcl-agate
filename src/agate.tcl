@@ -1,5 +1,8 @@
 package provide agate 0.1
 
+#TODO: Require a specific version
+package require Itcl
+
 namespace eval ::agate {
     namespace export application run get post put delete
 }
