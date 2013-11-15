@@ -4,8 +4,7 @@ install:
     - chmod +x teacup
     - sudo ./teacup setup /usr/bin/tclsh
 script:
-    - pwd
-    - ./teacup create "/home/travis/build/AngryLawyer/lib/teapot"
-    - sudo ./teacup link make "/home/travis/build/AngryLawyer/lib/teapot" "/usr/bin/tclsh"
+    - ./teacup create "../lib/teapot"
+    - sudo ./teacup link make "../lib/teapot" "/usr/bin/tclsh"
     - ./teacup install Itcl
     - cd tests && tclsh all.tcl
