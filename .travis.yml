@@ -5,5 +5,6 @@ install:
 script:
     - sudo ./teacup setup /usr/bin/tclsh
     - ./teacup create /home/travis/build/AngryLawyer/lib/teapot
+    - ./teacup link make "/home/travis/build/AngryLawyer/lib/teapot"
     - ./teacup install Itcl
     - cd tests && tclsh all.tcl
