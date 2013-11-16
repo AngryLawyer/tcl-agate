@@ -7,26 +7,32 @@ source ../src/agate.tcl
 test setRoutes {
     Adding a route should put it in the routes table
 } -body {
-    set app [agate::application]
-    agate::router::setRoute app GET "^/$" {}
-    return [agate::router::getRoutes app GET]
+    agate::router::Router router 
+    router setRoute GET "^/$" {}
+    return [router getRoutes GET]
+} -cleanup {
+    itcl::delete object router
 } -result {{{^/$} {}}}
 
 test matchRoute {
     Simple paths should match
 } -body {
-    set app [agate::application]
-    agate::router::setRoute app GET "^/$" {{} puts trololo}
-    return [agate::router::matchRoute $app GET "/"]
+    agate::router::Router router 
+    router setRoute GET "^/$" {{} puts trololo}
+    return [router matchRoute GET "/"]
+} -cleanup {
+    itcl::delete object router
 } -result {{{} puts trololo} {}}
 
 test matchRoute_capture {
     Routes with captures should grab them
 } -body {
-    set app [agate::application]
-    agate::router::setRoute app GET "^/$" {{} puts trololo}
-    agate::router::setRoute app GET {^([A-Za-z]+)/$} {{input} puts $input}
-    return [agate::router::matchRoute $app GET "toaster/"]
+    agate::router::Router router 
+    router setRoute GET "^/$" {{} puts trololo}
+    router setRoute GET {^([A-Za-z]+)/$} {{input} puts $input}
+    return [router matchRoute GET "toaster/"]
+} -cleanup {
+    itcl::delete object router
 } -result {{{input} puts $input} toaster}
 
 cleanupTests

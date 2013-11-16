@@ -1,0 +1,15 @@
+package require tcltest
+namespace import ::tcltest::test
+namespace import ::tcltest::cleanupTests
+
+source ../src/agate.tcl
+
+test application {
+    We should be able to instantiate an instance of the application class
+} -body {
+    ::agate::Application app
+} -cleanup {
+    itcl::delete object app
+} -result {app}
+
+cleanupTests

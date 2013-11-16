@@ -2,8 +2,21 @@ namespace eval ::agate::router {
     namespace export init setRoutes getRoutes matchRoute
 }
 
-proc ::agate::router::init {} {
-    return [dict create GET [list] POST [list] PUT [list] DELETE [list]]
+itcl::class ::agate::router::Router {
+
+    private variable routes [dict create GET [list] POST [list] PUT [list] DELETE [list]]
+
+    constructor {} {
+    }
+
+    method setRoute {type path method} {
+    }
+
+    method getRoutes {type} {
+    }
+
+    method matchRoute {type url} {
+    }
 }
 
 proc ::agate::router::setRoute {appVar type path method} {
