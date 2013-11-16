@@ -30,6 +30,15 @@ itcl::class ::agate::Application {
     } 
 
     method handle {requestData} {
+        set path [dict get $requestData path]
+        set method [dict get $requestData method] 
+        set callbackAndParams [router matchRoute $method $path]
+        if {$callbackAndParams != {}} {
+            lassign $callbackAndParams callback params
+            puts [apply $callback {*}[list $requestData {*}$params]]
+        } else {
+            puts 404
+        }
     }
 
     method get {path method} {
@@ -66,15 +75,3 @@ itcl::class ::agate::Application {
 #    puts $response
 #}
 #
-#proc ::agate::handle {appVar requestData} {
-#    upvar $appVar app
-#    set path [dict get $requestData path]
-#    set method [dict get $requestData method] 
-#    set callbackAndParams [::agate::router::matchRoute $app $method $path]
-#    if {$callbackAndParams != {}} {
-#        lassign $callbackAndParams callback params
-#        puts [apply $callback {*}[list $requestData {*}$params]]
-#    } else {
-#        puts 404
-#    }
-#}
