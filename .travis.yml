@@ -1,6 +1,6 @@
 install:
     - sudo apt-get install tcl
-    - wget --output-document=teacup http://teapot.activestate.com/application/name/teacup/ver/8.5.15.1.297601/arch/linux-glibc2.3-x86_64/file.exe
+    - wget --output-document=teacup http://teapot.activestate.com/application/name/teacup/ver/8.5.15.1.297602/arch/linux-glibc2.3-x86_64/file.exe
     - chmod +x teacup
     - sudo ./teacup setup /usr/bin/tclsh
     - ./teacup create "../lib/teapot"
