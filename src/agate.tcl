@@ -19,7 +19,11 @@ itcl::class ::agate::Application {
     private variable router {}
 
     constructor {} {
-        set router [::agate::router::Router]
+        ::agate::router::Router router
+    }
+
+    destructor {
+        itcl::delete object router
     }
 
     method run {{requestData 0}} {
@@ -28,16 +32,24 @@ itcl::class ::agate::Application {
     method handle {requestData} {
     }
 
-    method get {appVar path method} {
+    method get {path method} {
+        router setRoute GET $path $method
     }
 
-    method post {appVar path method} {
+    method post {path method} {
+        router setRoute POST $path $method
     }
 
-    method put {appVar path method} {
+    method put {path method} {
+        router setRoute PUT $path $method
     }
 
-    method delete {appVar path method} {
+    method delete {path method} {
+        router setRoute DELETE $path $method
+    }
+
+    method getRoutes {} {
+        return "GET [router getRoutes GET] POST [router getRoutes POST] PUT [router getRoutes PUT] DELETE [router getRoutes DELETE]"
     }
 
     method getRouter {} {
@@ -65,24 +77,4 @@ itcl::class ::agate::Application {
 #    } else {
 #        puts 404
 #    }
-#}
-#
-#proc ::agate::get {appVar path method} {
-#    upvar $appVar app
-#    ::agate::router::setRoute app GET $path $method
-#}
-#
-#proc ::agate::post {appVar path method} {
-#    upvar $appVar app
-#    ::agate::router::setRoute app POST $path $method
-#}
-#
-#proc ::agate::put {appVar path method} {
-#    upvar $appVar app
-#    ::agate::router::setRoute app PUT $path $method
-#}
-#
-#proc ::agate::delete {appVar path method} {
-#    upvar $appVar app
-#    ::agate::router::setRoute app DELETE $path $method
 #}

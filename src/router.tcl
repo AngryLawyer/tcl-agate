@@ -20,7 +20,6 @@ itcl::class ::agate::router::Router {
     }
 
     # Check against a given method type whether any URLs match it
-    # @param appVar The Agate dictionary
     # @param type The method type to match
     # @param url The input url
     #
