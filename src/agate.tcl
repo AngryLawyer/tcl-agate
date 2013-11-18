@@ -19,11 +19,11 @@ itcl::class ::agate::Application {
     private variable router {}
 
     constructor {} {
-        ::agate::router::Router router
+        set router [::agate::router::Router #auto]
     }
 
     destructor {
-        itcl::delete object router
+        itcl::delete object $router
     }
 
     method run {{requestData 0}} {
@@ -42,27 +42,27 @@ itcl::class ::agate::Application {
     }
 
     method get {path method} {
-        router setRoute GET $path $method
+        $router setRoute GET $path $method
     }
 
     method post {path method} {
-        router setRoute POST $path $method
+        $router setRoute POST $path $method
     }
 
     method put {path method} {
-        router setRoute PUT $path $method
+        $router setRoute PUT $path $method
     }
 
     method delete {path method} {
-        router setRoute DELETE $path $method
+        $router setRoute DELETE $path $method
     }
 
     method getRoutes {} {
-        return "GET [router getRoutes GET] POST [router getRoutes POST] PUT [router getRoutes PUT] DELETE [router getRoutes DELETE]"
+        return "GET [$router getRoutes GET] POST [$router getRoutes POST] PUT [$router getRoutes PUT] DELETE [$router getRoutes DELETE]"
     }
 
     method getRouter {} {
-        return $router
+        return [namespace which $router]
     }
 }
 
