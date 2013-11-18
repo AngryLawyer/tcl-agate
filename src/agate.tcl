@@ -17,16 +17,25 @@ agate::relativeSource request.tcl
 itcl::class ::agate::Application {
 
     private variable router {}
+    private variable requestHandler {}
 
     constructor {} {
         set router [::agate::router::Router #auto]
+        set requestHandler [::agate::request::RequestHandler #auto]
     }
 
     destructor {
         itcl::delete object $router
+        itcl::delete object $requestHandler
     }
 
-    method run {{requestData 0}} {
+    method run {{requestData {}}} {
+        if {$requestData == {}} {
+            set requestData [$requestHandler generateRequestData]
+        }
+        puts $requestData
+        set response [handle $requestData]
+        puts $response
     } 
 
     method handle {requestData} {
@@ -65,13 +74,3 @@ itcl::class ::agate::Application {
         return [namespace which $router]
     }
 }
-
-#proc ::agate::run {appVar {requestData 0}} {
-#    upvar $appVar app
-#    if {$requestData == 0} {
-#        set requestData [::agate::request::generateRequestData]
-#    }
-#    set response [::agate::handle app $requestData]
-#    puts $response
-#}
-#

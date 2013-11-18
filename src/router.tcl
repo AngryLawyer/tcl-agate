@@ -1,5 +1,5 @@
 namespace eval ::agate::router {
-    namespace export init setRoutes getRoutes matchRoute
+    namespace export Router
 }
 
 itcl::class ::agate::router::Router {

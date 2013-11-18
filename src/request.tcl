@@ -1,11 +1,9 @@
 namespace eval ::agate::request {
-    namespace export init setRoutes getRoutes
+    namespace export RequestHandler
 }
 
-proc ::agate::request::generateRequestData {} {
-
-    # TODO: Check for Rivet before actually doing any of this
-    ::rivet::load_env
-    parray ::request::env
-    return [dict create path $::request::env(REQUEST_URI) method $::request::env(REQUEST_METHOD)]
+itcl::class ::agate::request::RequestHandler {
+    method generateRequestData {} {
+        return [dict create [array get $::request::env]]
+    }
 }
