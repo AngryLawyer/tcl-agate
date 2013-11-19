@@ -16,13 +16,13 @@ test get_post_put_delete {
     We should be able to set GET, POST, PUT, and DELETE paths
 } -body {
     ::agate::Application app
-    app get "/" {{} }
-    app put "/" {{} }
-    app post "/" {{} }
-    app delete "/" {{} }
+    app get "/" {{} {}}
+    app put "/" {{} {}}
+    app post "/" {{} {}}
+    app delete "/" {{} {}}
     return [app getRoutes] 
 } -cleanup {
     itcl::delete object app
-} -result {GET {/ {{} }} POST {/ {{} }} PUT {/ {{} }} DELETE {/ {{} }}}
+} -result {GET {/ {{} {}}} POST {/ {{} {}}} PUT {/ {{} {}}} DELETE {/ {{} {}}}}
 
 cleanupTests

@@ -16,12 +16,16 @@ agate::relativeSource request.tcl
 
 itcl::class ::agate::Application {
 
+    private variable components [dict create \
+        requestHandler ::agate::request::RivetRequestHandler \
+        router ::agate::router::Router
+    ]
+
     private variable router {}
     private variable requestHandler {}
 
-    constructor {} {
-        set router [::agate::router::Router #auto]
-        set requestHandler [::agate::request::RequestHandler #auto]
+    constructor {args} {
+        $this apply_components {*}args
     }
 
     destructor {
@@ -29,22 +33,33 @@ itcl::class ::agate::Application {
         itcl::delete object $requestHandler
     }
 
+    method apply_components {args} {
+        dict for {key ctor} $components {
+            if {[llength $args] >= 2 && [dict exists $args "-$key"]} {
+                set $key [dict get "-$key"]
+            } else {
+                set $key [$ctor #auto]
+            }
+        }
+    }
+
     method run {{requestData {}}} {
         if {$requestData == {}} {
             set requestData [$requestHandler generateRequestData]
         }
-        puts $requestData
         set response [handle $requestData]
         puts $response
     } 
 
     method handle {requestData} {
-        set path [dict get $requestData path]
-        set method [dict get $requestData method] 
-        set callbackAndParams [router matchRoute $method $path]
+        set path [dict get $requestData REQUEST_URI]
+        set method [dict get $requestData REQUEST_METHOD] 
+        set callbackAndParams [$router matchRoute $method $path]
         if {$callbackAndParams != {}} {
             lassign $callbackAndParams callback params
-            puts [apply $callback {*}[list $requestData {*}$params]]
+            set callingArgs [list $requestData {*}$params]
+            #TODO: Check we're not calling with more params then available, if the last isn't args
+            puts [apply $callback {*}$callingArgs]
         } else {
             puts 404
         }
