@@ -59,9 +59,9 @@ itcl::class ::agate::Application {
             lassign $callbackAndParams callback params
             set callingArgs [list $requestData {*}$params]
             #TODO: Check we're not calling with more params then available, if the last isn't args
-            puts [apply $callback {*}$callingArgs]
+            return [apply $callback {*}$callingArgs]
         } else {
-            puts 404
+            return 404
         }
     }
 

@@ -25,4 +25,53 @@ test get_post_put_delete {
     itcl::delete object app
 } -result {GET {/ {{} {}}} POST {/ {{} {}}} PUT {/ {{} {}}} DELETE {/ {{} {}}}}
 
+test handle_valid {
+    Hitting a standard url should get us a response
+} -body {
+    ::agate::Application app
+    app get "/" {{request} {return LOL}}
+    return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+} -cleanup {
+    itcl::delete object app
+} -result {LOL}
+
+test handle_404 {
+    Hitting a bad URL should throw a 404 at us
+} -body {
+    ::agate::Application app
+    return [app handle {REQUEST_URI "lol/" REQUEST_METHOD GET}] 
+} -cleanup {
+    itcl::delete object app
+} -result {404}
+
+test handle_paramless_callback {
+    Hitting a standard url with a paramless callback should get a response 
+} -body {
+    ::agate::Application app
+    app get "/" {{} {return LOL}}
+    return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+} -cleanup {
+    itcl::delete object app
+} -result {LOL}
+
+test handle_too_few_params {
+    Hitting a url with less parameters than expected should get a response
+} -body {
+    ::agate::Application app
+    app get "/" {{response first} {return LOL}}
+    return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+} -cleanup {
+    itcl::delete object app
+} -result {LOL}
+
+test handle_too_many_params {
+    Hitting a url with more parameters than expected should get a response
+} -body {
+    ::agate::Application app
+    app get "/(a-z)+/(a-z)+/(a-z)+/" {{response first} {return LOL}}
+    return [app handle {REQUEST_URI "/a/a/a/" REQUEST_METHOD GET}] 
+} -cleanup {
+    itcl::delete object app
+} -result {LOL}
+
 cleanupTests
