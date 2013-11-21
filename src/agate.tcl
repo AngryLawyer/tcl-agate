@@ -18,11 +18,13 @@ itcl::class ::agate::Application {
 
     private variable components [dict create \
         requestHandler ::agate::request::RivetRequestHandler \
-        router ::agate::router::Router
+        router ::agate::router::Router \
+        responseHandler ::agate::response::RivetResponseHandler
     ]
 
     private variable router {}
     private variable requestHandler {}
+    private variable responseHandler {}
 
     constructor {args} {
         $this apply_components {*}args
@@ -31,6 +33,7 @@ itcl::class ::agate::Application {
     destructor {
         itcl::delete object $router
         itcl::delete object $requestHandler
+        itcl::delete object $responseHandler
     }
 
     method apply_components {args} {
@@ -74,7 +77,11 @@ itcl::class ::agate::Application {
             }
 
             set callback [list $callbackArgs [lindex $callback 1]]
-            return [apply $callback {*}$callingArgs]
+            set response [apply $callback {*}$callingArgs]
+            if {[response isa Response] == 0} {
+                #TODO: Generate a response object
+            }
+            return [$responseHandler consumeResponse $response]
         } else {
             return 404
         }
