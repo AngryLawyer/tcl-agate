@@ -57,8 +57,23 @@ itcl::class ::agate::Application {
         set callbackAndParams [$router matchRoute $method $path]
         if {$callbackAndParams != {}} {
             lassign $callbackAndParams callback params
-            set callingArgs [list $requestData {*}$params]
-            #TODO: Check we're not calling with more params then available, if the last isn't args
+            # Prepend our additional values for access to $request and $this
+            set callingArgs [list $this $requestData {*}$params]
+            set callbackArgs [list this request {*}[lindex $callback 0]]
+
+            set callingArgsLength [llength $callingArgs]
+            set callbackArgsLength [llength $callbackArgs]
+
+            set lengthComparison [expr $callbackArgsLength - $callingArgsLength]
+            if {$lengthComparison > 0} {
+                # We got more callbackArgs than callingArgs? Inflate, and pass empty strings
+                set callingArgs [list {*}$callingArgs {*}[lrepeat $lengthComparison {}]]
+            } elseif {$lengthComparison < 0} {
+                # If we've got more callingArgs than callbackArgs, truncate 
+                set callingArgs [lrange $callingArgs 0 [expr $callbackArgsLength - 1]]
+            }
+
+            set callback [list $callbackArgs [lindex $callback 1]]
             return [apply $callback {*}$callingArgs]
         } else {
             return 404

@@ -16,20 +16,20 @@ test get_post_put_delete {
     We should be able to set GET, POST, PUT, and DELETE paths
 } -body {
     ::agate::Application app
-    app get "/" {{} {}}
-    app put "/" {{} {}}
-    app post "/" {{} {}}
-    app delete "/" {{} {}}
+    app get "^/$" {{} {}}
+    app put "^/$" {{} {}}
+    app post "^/$" {{} {}}
+    app delete "^/$" {{} {}}
     return [app getRoutes] 
 } -cleanup {
     itcl::delete object app
-} -result {GET {/ {{} {}}} POST {/ {{} {}}} PUT {/ {{} {}}} DELETE {/ {{} {}}}}
+} -result {GET {{^/$} {{} {}}} POST {{^/$} {{} {}}} PUT {{^/$} {{} {}}} DELETE {{^/$} {{} {}}}}
 
 test handle_valid {
     Hitting a standard url should get us a response
 } -body {
     ::agate::Application app
-    app get "/" {{request} {return LOL}}
+    app get "^/$" {{} {return LOL}}
     return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
 } -cleanup {
     itcl::delete object app
@@ -44,21 +44,31 @@ test handle_404 {
     itcl::delete object app
 } -result {404}
 
-test handle_paramless_callback {
-    Hitting a standard url with a paramless callback should get a response 
+test access_to_request {
+    We should have implicit access to $request
 } -body {
     ::agate::Application app
-    app get "/" {{} {return LOL}}
-    return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+    app get "^/$" {{} {return $request}}
+    app handle {REQUEST_URI "/" REQUEST_METHOD GET}
 } -cleanup {
     itcl::delete object app
-} -result {LOL}
+} -result {REQUEST_URI "/" REQUEST_METHOD GET}
+
+test access_to_self {
+    We should have implicit access to $this
+} -body {
+    ::agate::Application app
+    app get "^/$" {{} {return [$this isa ::agate::Application]}}
+    app handle {REQUEST_URI "/" REQUEST_METHOD GET}
+} -cleanup {
+    itcl::delete object app
+} -result {1}
 
 test handle_too_few_params {
     Hitting a url with less parameters than expected should get a response
 } -body {
     ::agate::Application app
-    app get "/" {{response first} {return LOL}}
+    app get "^/$" {{first} {return LOL}}
     return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
 } -cleanup {
     itcl::delete object app
@@ -68,7 +78,7 @@ test handle_too_many_params {
     Hitting a url with more parameters than expected should get a response
 } -body {
     ::agate::Application app
-    app get "/(a-z)+/(a-z)+/(a-z)+/" {{response first} {return LOL}}
+    app get {^/([a-z]+)/([a-z]+)/([a-z]+)/$} {{first} {return LOL}}
     return [app handle {REQUEST_URI "/a/a/a/" REQUEST_METHOD GET}] 
 } -cleanup {
     itcl::delete object app
