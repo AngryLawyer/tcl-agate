@@ -13,6 +13,7 @@ proc ::agate::relativeSource {name} {
 
 agate::relativeSource router.tcl
 agate::relativeSource request.tcl
+agate::relativeSource response.tcl
 
 itcl::class ::agate::Application {
 
@@ -78,9 +79,11 @@ itcl::class ::agate::Application {
 
             set callback [list $callbackArgs [lindex $callback 1]]
             set response [apply $callback {*}$callingArgs]
-            if {[response isa Response] == 0} {
+
+            if {[itcl::is object $response] == 0} {
                 #TODO: Generate a response object
             }
+
             return [$responseHandler consumeResponse $response]
         } else {
             return 404
