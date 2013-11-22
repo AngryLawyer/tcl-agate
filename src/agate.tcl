@@ -52,7 +52,7 @@ itcl::class ::agate::Application {
             set requestData [$requestHandler generateRequestData]
         }
         set response [handle $requestData]
-        puts $response
+        return [$responseHandler consumeResponse $response]
     } 
 
     method handle {requestData} {
@@ -84,7 +84,7 @@ itcl::class ::agate::Application {
                 #TODO: Generate a response object
             }
 
-            return [$responseHandler consumeResponse $response]
+            return $response
         } else {
             return 404
         }
@@ -112,5 +112,9 @@ itcl::class ::agate::Application {
 
     method getRouter {} {
         return [namespace which $router]
+    }
+    
+    method generateResponse {} {
+        return [::agate::response::Response #auto]
     }
 }
