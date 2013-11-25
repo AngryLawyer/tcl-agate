@@ -82,6 +82,9 @@ itcl::class ::agate::response::RivetResponseHandler {
         return [$this makeResponse $body 500]
     }
 
-    method redirect {} {
+    method redirect {targetUrl {statusCode 302}} {
+        set response [$this makeResponse {} $statusCode]
+        $response setHeader Location $targetUrl
+        return $response
     }
 }

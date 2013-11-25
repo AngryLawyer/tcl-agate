@@ -37,5 +37,16 @@ test notFound {
     itcl::delete object $response
 } -result {404 }
 
+test redirect {
+    redirect should produce a 302 response with a location header
+} -body {
+    set handler [agate::response::RivetResponseHandler #auto]
+    set response [$handler redirect "http://github.com"]
+    return "[$response getStatusCode] [$response getHeader Location]"
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $response
+} -result {302 http://github.com}
+
 cleanupTests
 
