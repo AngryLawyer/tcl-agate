@@ -60,7 +60,7 @@ itcl::class ::agate::response::RivetResponseHandler {
         set body [$responseData getBody]
         set headerData [$responseData getHeaders]
 
-        itcl::object delete $responseData
+        itcl::delete object $responseData
 
         dict for {headerName headerData} $headers {
             $headers set $headerName $headerData
