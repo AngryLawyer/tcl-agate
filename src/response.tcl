@@ -4,6 +4,7 @@ namespace eval ::agate::response {
 
 itcl::class ::agate::response::Response {
 
+    protected variable statusCode 200
     protected variable headerData {}
     protected variable body {}
 
@@ -36,11 +37,11 @@ itcl::class ::agate::response::Response {
     }
 
     method setStatusCode {number} {
-        $this setHeader Status $number
+        set statusCode $number
     }
 
     method getStatusCode {} {
-        $this getHeader Status
+        return $statusCode
     }
 }
 
@@ -63,8 +64,11 @@ itcl::class ::agate::response::RivetResponseHandler {
     method consumeResponse {responseData} {
         set body [$responseData getBody]
         set headerData [$responseData getHeaders]
+        set statusCode [$responseData getStatusCode]
 
         itcl::delete object $responseData
+
+        $headers numeric $statusCode
 
         dict for {headerName headerData} $headerData {
             $headers set $headerName $headerData
