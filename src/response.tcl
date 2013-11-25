@@ -48,11 +48,15 @@ itcl::class ::agate::response::RivetResponseHandler {
 
     private variable headers {}
 
-    constructor {} {
-        if {[namespace exists ::rivet]} {
-            set headers ::rivet::headers
+    constructor {{headersOverride {}}} {
+        if {$headersOverride == {}} {
+            if {[namespace exists ::rivet]} {
+                set headers ::rivet::headers
+            } else {
+                set headers headers
+            }
         } else {
-            set headers headers
+            set headers $headersOverride
         }
     }
 
@@ -62,7 +66,7 @@ itcl::class ::agate::response::RivetResponseHandler {
 
         itcl::delete object $responseData
 
-        dict for {headerName headerData} $headers {
+        dict for {headerName headerData} $headerData {
             $headers set $headerName $headerData
         }
         puts $body

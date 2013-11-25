@@ -48,5 +48,17 @@ test redirect {
     itcl::delete object $response
 } -result {302 http://github.com}
 
+test consumeResponse {
+    consumeResponse shouldn't blow up
+} -body {
+    proc headers {args} {}
+    set handler [agate::response::RivetResponseHandler #auto headers]
+    set response [$handler makeResponse "hi"]
+    $handler consumeResponse $response
+} -cleanup {
+    itcl::delete object $handler
+    rename headers ""
+} -result {}
+
 cleanupTests
 
