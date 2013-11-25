@@ -30,7 +30,8 @@ test handle_valid {
 } -body {
     ::agate::Application app
     app get "^/$" {{} {return LOL}}
-    return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+    set response [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+    return [$response getBody]
 } -cleanup {
     itcl::delete object app
 } -result {LOL}
@@ -39,7 +40,8 @@ test handle_404 {
     Hitting a bad URL should throw a 404 at us
 } -body {
     ::agate::Application app
-    return [app handle {REQUEST_URI "lol/" REQUEST_METHOD GET}] 
+    set response [app handle {REQUEST_URI "lol/" REQUEST_METHOD GET}] 
+    return [$response getStatusCode]
 } -cleanup {
     itcl::delete object app
 } -result {404}
@@ -49,7 +51,8 @@ test access_to_request {
 } -body {
     ::agate::Application app
     app get "^/$" {{} {return $request}}
-    app handle {REQUEST_URI "/" REQUEST_METHOD GET}
+    set response [app handle {REQUEST_URI "/" REQUEST_METHOD GET}]
+    return [$response getBody]
 } -cleanup {
     itcl::delete object app
 } -result {REQUEST_URI "/" REQUEST_METHOD GET}
@@ -59,7 +62,19 @@ test access_to_self {
 } -body {
     ::agate::Application app
     app get "^/$" {{} {return [$this isa ::agate::Application]}}
-    app handle {REQUEST_URI "/" REQUEST_METHOD GET}
+    set response [app handle {REQUEST_URI "/" REQUEST_METHOD GET}]
+    return [$response getBody]
+} -cleanup {
+    itcl::delete object app
+} -result {1}
+
+test access_to_responseHandler {
+    We should have implicit access to $responseHandler
+} -body {
+    ::agate::Application app
+    app get "^/$" {{} {return [$responseHandler isa ::agate::response::RivetResponseHandler]}}
+    set response [app handle {REQUEST_URI "/" REQUEST_METHOD GET}]
+    return [$response getBody]
 } -cleanup {
     itcl::delete object app
 } -result {1}
@@ -69,7 +84,8 @@ test handle_too_few_params {
 } -body {
     ::agate::Application app
     app get "^/$" {{first} {return LOL}}
-    return [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+    set response [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+    return [$response getBody]
 } -cleanup {
     itcl::delete object app
 } -result {LOL}
@@ -79,7 +95,8 @@ test handle_too_many_params {
 } -body {
     ::agate::Application app
     app get {^/([a-z]+)/([a-z]+)/([a-z]+)/$} {{first} {return LOL}}
-    return [app handle {REQUEST_URI "/a/a/a/" REQUEST_METHOD GET}] 
+    set response [app handle {REQUEST_URI "/a/a/a/" REQUEST_METHOD GET}] 
+    return [$response getBody]
 } -cleanup {
     itcl::delete object app
 } -result {LOL}

@@ -62,8 +62,8 @@ itcl::class ::agate::Application {
         if {$callbackAndParams != {}} {
             lassign $callbackAndParams callback params
             # Prepend our additional values for access to $request and $this
-            set callingArgs [list $this $requestData {*}$params]
-            set callbackArgs [list this request {*}[lindex $callback 0]]
+            set callingArgs [list $this $requestData [$this getResponseHandler] {*}$params]
+            set callbackArgs [list this request responseHandler {*}[lindex $callback 0]]
 
             set callingArgsLength [llength $callingArgs]
             set callbackArgsLength [llength $callbackArgs]
@@ -81,12 +81,12 @@ itcl::class ::agate::Application {
             set response [apply $callback {*}$callingArgs]
 
             if {[itcl::is object $response] == 0} {
-                #TODO: Generate a response object
+                set response [$responseHandler makeResponse 200 $response]
             }
 
             return $response
         } else {
-            return 404
+            return [$responseHandler makeResponse 404]
         }
     }
 
@@ -106,6 +106,7 @@ itcl::class ::agate::Application {
         $router setRoute DELETE $path $method
     }
 
+
     method getRoutes {} {
         return "GET [$router getRoutes GET] POST [$router getRoutes POST] PUT [$router getRoutes PUT] DELETE [$router getRoutes DELETE]"
     }
@@ -113,8 +114,8 @@ itcl::class ::agate::Application {
     method getRouter {} {
         return [namespace which $router]
     }
-    
-    method generateResponse {} {
-        return [::agate::response::Response #auto]
+
+    method getResponseHandler {} {
+        return [namespace which $responseHandler]
     }
 }

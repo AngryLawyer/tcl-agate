@@ -16,8 +16,8 @@ itcl::class ::agate::response::Response {
     }
 
     method getHeader {header} {
-        if {dict exists $headerData $header} {
-            dict get $headers $header
+        if {[dict exists $headerData $header]} {
+            return [dict get $headerData $header]
         } else {
             return {}
         }
@@ -33,6 +33,14 @@ itcl::class ::agate::response::Response {
 
     method setBody {newBody} {
         set body $newBody
+    }
+
+    method setStatusCode {number} {
+        $this setHeader Status $number
+    }
+
+    method getStatusCode {} {
+        $this getHeader Status
     }
 }
 
@@ -58,5 +66,22 @@ itcl::class ::agate::response::RivetResponseHandler {
             $headers set $headerName $headerData
         }
         puts $body
+    }
+
+    method makeResponse {{statusCode 200} {body {}}} {
+        set response [::agate::response::Response #auto $body]
+        $response setStatusCode $statusCode 
+        return [namespace which $response]
+    }
+
+    method notFound {{body {}}} {
+        return [$this makeResponse 404 $body]
+    }
+
+    method error {} {
+        return [$this makeResponse 500 $body]
+    }
+
+    method redirect {} {
     }
 }
