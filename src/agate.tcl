@@ -81,12 +81,12 @@ itcl::class ::agate::Application {
             set response [apply $callback {*}$callingArgs]
 
             if {[itcl::is object $response] == 0} {
-                set response [$responseHandler makeResponse 200 $response]
+                set response [$responseHandler makeResponse $response]
             }
 
             return $response
         } else {
-            return [$responseHandler makeResponse 404]
+            return [$responseHandler notFound]
         }
     }
 

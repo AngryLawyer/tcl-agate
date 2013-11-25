@@ -68,18 +68,18 @@ itcl::class ::agate::response::RivetResponseHandler {
         puts $body
     }
 
-    method makeResponse {{statusCode 200} {body {}}} {
+    method makeResponse {{body {}} {statusCode 200}} {
         set response [::agate::response::Response #auto $body]
         $response setStatusCode $statusCode 
         return [namespace which $response]
     }
 
     method notFound {{body {}}} {
-        return [$this makeResponse 404 $body]
+        return [$this makeResponse $body 404]
     }
 
     method error {} {
-        return [$this makeResponse 500 $body]
+        return [$this makeResponse $body 500]
     }
 
     method redirect {} {

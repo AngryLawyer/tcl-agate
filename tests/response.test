@@ -1,0 +1,41 @@
+package require tcltest
+namespace import ::tcltest::test
+namespace import ::tcltest::cleanupTests
+
+source ../src/agate.tcl
+
+test makeResponse {
+    makeResponse should return a 200 response
+} -body {
+    set handler [agate::response::RivetResponseHandler #auto]
+    set response [$handler makeResponse]
+    return "[$response getStatusCode] [$response getBody]"
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $response
+} -result {200 }
+
+test makeResponse_withBody {
+    makeResponse should return a 200 response and a body
+} -body {
+    set handler [agate::response::RivetResponseHandler #auto]
+    set response [$handler makeResponse "hi"]
+    return "[$response getStatusCode] [$response getBody]"
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $response
+} -result {200 hi}
+
+test notFound {
+    notFound should return a 404 response
+} -body {
+    set handler [agate::response::RivetResponseHandler #auto]
+    set response [$handler notFound]
+    return "[$response getStatusCode] [$response getBody]"
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $response
+} -result {404 }
+
+cleanupTests
+
