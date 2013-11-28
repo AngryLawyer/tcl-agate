@@ -4,6 +4,12 @@ namespace import ::tcltest::cleanupTests
 
 source ../src/agate.tcl
 
+proc fakeRequest {{headers {}}} {
+    set request [::agate::request::Request #auto]
+    $request setHeaderData $headers
+    return [namespace which $request]
+}
+
 test application {
     We should be able to instantiate an instance of the application class
 } -body {
@@ -30,10 +36,13 @@ test handle_valid {
 } -body {
     ::agate::Application app
     app get "^/$" {{} {return LOL}}
-    set response [app handle {REQUEST_URI "/" REQUEST_METHOD GET}] 
+    set request [fakeRequest {REQUEST_URI "/" REQUEST_METHOD GET}]
+    set response [app handle $request] 
     return [$response getBody]
 } -cleanup {
     itcl::delete object app
+    itcl::delete object $response
+    itcl::delete object $request
 } -result {LOL}
 
 test handle_404 {
