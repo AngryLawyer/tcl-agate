@@ -7,7 +7,7 @@ source ../src/agate.tcl
 test makeRequest {
     makeRequest should return a populated request
 } -body {
-    set handler [agate::request::RivetRequestHandler #auto]
+    set handler [agate::request::BaseRequestHandler #auto]
     set request [$handler makeRequest]
     return [$request isa agate::request::Request]
 } -cleanup {

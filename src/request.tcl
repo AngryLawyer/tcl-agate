@@ -2,7 +2,22 @@ namespace eval ::agate::request {
     namespace export RivetRequestHandler
 }
 
+itcl::class ::agate::request::BaseRequestHandler {
+
+    method generateHeaderData {} {
+        return {}
+    }
+
+    method makeRequest {} {
+        set request [::agate::request::Request #auto]
+        $request setHeaderData [generateHeaderData]
+        return [namespace which $request]
+    }
+}
+
 itcl::class ::agate::request::RivetRequestHandler {
+    inherit ::agate::request::BaseRequestHandler
+
     private variable load_env {}
 
     constructor {} {

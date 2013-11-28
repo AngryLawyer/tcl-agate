@@ -56,7 +56,6 @@ itcl::class ::agate::Application {
         }
 
         set response [handle $request]
-        puts $request
 
         if {owned} {
             itcl::delete object $request
@@ -65,14 +64,15 @@ itcl::class ::agate::Application {
         return [$responseHandler consumeResponse $response]
     } 
 
-    method handle {requestData} {
-        set path [dict get $requestData REQUEST_URI]
-        set method [dict get $requestData REQUEST_METHOD] 
+    method handle {request} {
+        set path [$request getHeader REQUEST_URI /]
+        set method [$request getHeader REQUEST_METHOD GET]
+
         set callbackAndParams [$router matchRoute $method $path]
         if {$callbackAndParams != {}} {
             lassign $callbackAndParams callback params
             # Prepend our additional values for access to $request and $this
-            set callingArgs [list $this $requestData [$this getResponseHandler] {*}$params]
+            set callingArgs [list $this $request [$this getResponseHandler] {*}$params]
             set callbackArgs [list this request responseHandler {*}[lindex $callback 0]]
 
             set callingArgsLength [llength $callingArgs]
