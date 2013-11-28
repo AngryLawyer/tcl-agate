@@ -1,0 +1,18 @@
+package require tcltest
+namespace import ::tcltest::test
+namespace import ::tcltest::cleanupTests
+
+source ../src/agate.tcl
+
+test makeRequest {
+    makeRequest should return a populated request
+} -body {
+    set handler [agate::request::RivetRequestHandler #auto]
+    set request [$handler makeRequest]
+    return [$request isa agate::request::Request]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {1}
+
+cleanupTests

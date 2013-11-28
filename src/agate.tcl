@@ -47,11 +47,21 @@ itcl::class ::agate::Application {
         }
     }
 
-    method run {{requestData {}}} {
-        if {$requestData == {}} {
-            set requestData [$requestHandler generateRequestData]
+    method run {{request {}}} {
+        if {$request == {}} {
+            set request [$requestHandler makeRequest]
+            set owned 1
+        } else {
+            set owned 0
         }
-        set response [handle $requestData]
+
+        set response [handle $request]
+        puts $request
+
+        if {owned} {
+            itcl::delete object $request
+        }
+
         return [$responseHandler consumeResponse $response]
     } 
 
