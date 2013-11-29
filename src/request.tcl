@@ -48,7 +48,7 @@ itcl::class ::agate::request::Request {
     }
 
     method getHeader {header {default {}}} {
-        if {dict exists $headerData $header} {
+        if {[dict exists $headerData $header]} {
             return [dict get $headerData $header]
         } else {
             return $default
