@@ -1,5 +1,5 @@
 namespace eval ::agate::util {
-    namespace export getOrDefault
+    namespace export getOrDefault stripGetParameters
 }
 
 proc ::agate::util::getOrDefault {group key default} {
@@ -8,4 +8,8 @@ proc ::agate::util::getOrDefault {group key default} {
     } else {
         return $default
     }
+}
+
+proc ::agate::util::stripGetParameters {uri} {
+    return $uri
 }

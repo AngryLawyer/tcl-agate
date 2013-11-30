@@ -11,7 +11,6 @@ itcl::class ::agate::request::BaseRequestHandler {
     method makeRequest {} {
         set request [::agate::request::Request #auto]
         $request setHeaderData [generateHeaderData]
-        $request setUri [$request getHeader REQUEST_URI]
         return [namespace which $request]
     }
 }
@@ -39,7 +38,7 @@ itcl::class ::agate::request::RivetRequestHandler {
     method makeRequest {} {
         set request [::agate::request::Request #auto]
         $request setHeaderData [generateHeaderData]
-        $request setUri [$request getHeader REQUEST_URI]
+        $request setUri [::agate::util::stripGetParameters [$request getHeader REQUEST_URI]]
         $request setGetData [$var_qs all]
         $request setPostData [$var_post all]
         return [namespace which $request]
