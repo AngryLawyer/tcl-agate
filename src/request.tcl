@@ -44,7 +44,7 @@ itcl::class ::agate::request::Request {
     private variable headerData {}
 
     method setHeaderData {newHeaderData} {
-        set headerData newHeaderData
+        set headerData $newHeaderData
     }
 
     method getHeader {header {default {}}} {

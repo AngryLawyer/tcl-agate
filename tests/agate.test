@@ -107,6 +107,7 @@ test handle_too_few_params {
     app get "^/$" {{first} {return LOL}}
     set request [fakeRequest {REQUEST_URI "/" REQUEST_METHOD GET}]
     set response [app handle $request] 
+    return [$response getBody]
 } -cleanup {
     itcl::delete object app
     itcl::delete object $response
