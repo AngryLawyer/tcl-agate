@@ -58,7 +58,7 @@ itcl::class ::agate::Application {
 
         set response [handle $request]
 
-        if {owned} {
+        if {$owned} {
             itcl::delete object $request
         }
 
