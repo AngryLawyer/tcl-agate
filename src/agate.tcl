@@ -11,6 +11,7 @@ proc ::agate::relativeSource {name} {
     source [file join [file dirname [info script]] $name]
 }
 
+agate::relativeSource util.tcl
 agate::relativeSource router.tcl
 agate::relativeSource request.tcl
 agate::relativeSource response.tcl

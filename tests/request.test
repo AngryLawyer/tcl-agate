@@ -15,4 +15,76 @@ test makeRequest {
     itcl::delete object $request
 } -result {1}
 
+test getData_key {
+    GET should return the keyed value, or {}
+} -body {
+    set handler [agate::request::BaseRequestHandler #auto]
+    set request [$handler makeRequest]
+    $request setGetData {lol True}
+    return [$request GET lol]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {True}
+
+test getData_all {
+    GET should return all data
+} -body {
+    set handler [agate::request::BaseRequestHandler #auto]
+    set request [$handler makeRequest]
+    $request setGetData {lol True}
+    return [$request GET]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {lol True}
+
+test getData_default {
+    GET should return a default value if specified
+} -body {
+    set handler [agate::request::BaseRequestHandler #auto]
+    set request [$handler makeRequest]
+    $request setGetData {lol True}
+    return [$request GET trolol False]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {False}
+
+test postData_key {
+    POST should return the keyed value, or {}
+} -body {
+    set handler [agate::request::BaseRequestHandler #auto]
+    set request [$handler makeRequest]
+    $request setPostData {lol True}
+    return [$request POST lol]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {True}
+
+test postData_all {
+    POST should return all data
+} -body {
+    set handler [agate::request::BaseRequestHandler #auto]
+    set request [$handler makeRequest]
+    $request setPostData {lol True}
+    return [$request POST]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {lol True}
+
+test postData_default {
+    POST should return a default value if specified
+} -body {
+    set handler [agate::request::BaseRequestHandler #auto]
+    set request [$handler makeRequest]
+    $request setPostData {lol True}
+    return [$request POST trolol False]
+} -cleanup {
+    itcl::delete object $handler
+    itcl::delete object $request
+} -result {False}
+
 cleanupTests

@@ -42,16 +42,36 @@ itcl::class ::agate::request::RivetRequestHandler {
 
 itcl::class ::agate::request::Request {
     private variable headerData {}
+    private variable getData {}
+    private variable postData {}
 
     method setHeaderData {newHeaderData} {
         set headerData $newHeaderData
     }
 
     method getHeader {header {default {}}} {
-        if {[dict exists $headerData $header]} {
-            return [dict get $headerData $header]
-        } else {
-            return $default
+        return [::agate::util::getOrDefault $headerData $header $default]
+    }
+
+    method setGetData {newGetData} {
+        set getData $newGetData
+    }
+
+    method setPostData {newPostData} {
+        set postData $newPostData
+    }
+
+    method GET {{key {}} {default {}}} {
+        if {$key != {}} {
+            return [::agate::util::getOrDefault $getData $key $default]
         }
+        return $getData
+    }
+
+    method POST {{key {}} {default {}}} {
+        if {$key != {}} {
+            return [::agate::util::getOrDefault $postData $key $default]
+        }
+        return $postData
     }
 }
