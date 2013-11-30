@@ -66,7 +66,7 @@ itcl::class ::agate::Application {
     } 
 
     method handle {request} {
-        set path [$request getHeader REQUEST_URI /]
+        set path [$request getUri]
         set method [$request getHeader REQUEST_METHOD GET]
 
         set callbackAndParams [$router matchRoute $method $path]

@@ -11,6 +11,7 @@ itcl::class ::agate::request::BaseRequestHandler {
     method makeRequest {} {
         set request [::agate::request::Request #auto]
         $request setHeaderData [generateHeaderData]
+        $request setUri [$request getHeader REQUEST_URI]
         return [namespace which $request]
     }
 }
@@ -18,13 +19,15 @@ itcl::class ::agate::request::BaseRequestHandler {
 itcl::class ::agate::request::RivetRequestHandler {
     inherit ::agate::request::BaseRequestHandler
 
-    private variable load_env {}
+    private variable load_env load_env
+    private variable var_qs var_qs
+    private variable var_post var_post
 
     constructor {} {
         if {[namespace exists ::rivet]} {
             set load_env ::rivet::load_env
-        } else {
-            set load_env load_env
+            set var_qs ::rivet::var_qs
+            set var_post ::rivet::var_post
         }
     }
 
@@ -36,6 +39,9 @@ itcl::class ::agate::request::RivetRequestHandler {
     method makeRequest {} {
         set request [::agate::request::Request #auto]
         $request setHeaderData [generateHeaderData]
+        $request setUri [$request getHeader REQUEST_URI]
+        $request setGetData [$var_qs all]
+        $request setPostData [$var_post all]
         return [namespace which $request]
     }
 }
@@ -44,6 +50,7 @@ itcl::class ::agate::request::Request {
     private variable headerData {}
     private variable getData {}
     private variable postData {}
+    private variable uri {}
 
     method setHeaderData {newHeaderData} {
         set headerData $newHeaderData
@@ -59,6 +66,14 @@ itcl::class ::agate::request::Request {
 
     method setPostData {newPostData} {
         set postData $newPostData
+    }
+
+    method getUri {} {
+        return $uri
+    }
+
+    method setUri {newUri} {
+        set uri $newUri
     }
 
     method GET {{key {}} {default {}}} {
