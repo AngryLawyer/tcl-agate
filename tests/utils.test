@@ -10,4 +10,10 @@ test stripGetParameters {
     return [::agate::util::stripGetParameters "/agate?get=true"]
 } -result {/agate}
 
+test stripBaseUrl {
+    We should be able to strip off a base URL
+} -body {
+    return [::agate::util::stripBaseUri "/agate/lolsworth/" "/agate"]
+} -result {/lolsworth/}
+
 cleanupTests

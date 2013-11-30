@@ -27,9 +27,11 @@ itcl::class ::agate::Application {
     private variable router {}
     private variable requestHandler {}
     private variable responseHandler {}
+    private variable baseUrl {}
 
     constructor {args} {
         $this apply_components {*}args
+        set baseUrl [::agate::util::getOrDefault $args -baseUrl {}]
     }
 
     destructor {
@@ -67,6 +69,9 @@ itcl::class ::agate::Application {
 
     method handle {request} {
         set path [$request getUri]
+        if {$baseUrl != {}} {
+            set path [::agate::util::stripBaseUri $path $baseUrl]
+        }
         set method [$request getHeader REQUEST_METHOD GET]
 
         set callbackAndParams [$router matchRoute $method $path]
