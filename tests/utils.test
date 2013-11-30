@@ -1,0 +1,13 @@
+package require tcltest
+namespace import ::tcltest::test
+namespace import ::tcltest::cleanupTests
+
+source ../src/agate.tcl
+
+test stripGetParameters {
+    We should be able to decouple GET parameters from a URI
+} -body {
+    return [::agate::util::stripGetParameters "/agate?get=true"]
+} -result {/agate}
+
+cleanupTests

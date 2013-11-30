@@ -11,5 +11,9 @@ proc ::agate::util::getOrDefault {group key default} {
 }
 
 proc ::agate::util::stripGetParameters {uri} {
+    set pos [string first ? $uri]
+    if {$pos > -1} {
+        return  [string range $uri 0 [expr $pos - 1]]
+    }
     return $uri
 }
