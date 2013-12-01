@@ -71,7 +71,7 @@ itcl::class ::agate::response::RivetResponseHandler {
         $headers numeric $statusCode
 
         dict for {headerName headerData} $headerData {
-            if {$headerName == Content-Type} {
+            if {$headerName == {Content-Type}} {
                 #Rivet handles Content-Type differently from normal headers
                 $headers type $headerData
             } else {
